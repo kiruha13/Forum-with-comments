@@ -63,8 +63,8 @@ $posts = mysqli_query($db, "SELECT * FROM posts ORDER BY id DESC");
     <meta charset="UTF-8">
     <title>Chat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="http_stackpath.bootstrapcdn.com_bootstrap_4.3.1_css_bootstrap.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/http_stackpath.bootstrapcdn.com_bootstrap_4.3.1_css_bootstrap.css">
 </head>
 <body>
 <div class="container">
