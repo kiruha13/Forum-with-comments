@@ -1,26 +1,26 @@
 <?php
-$con = mysqli_connect('localhost', 'root', 'mypass', 'notes2');
+require ("db.php");
 
 if (isset($_POST['liked'])) {
     $postid = $_POST['postid'];
-    $result = mysqli_query($con, "SELECT * FROM posts WHERE id=$postid");
+    $result = mysqli_query($db, "SELECT * FROM posts WHERE id=$postid");
     $row = mysqli_fetch_array($result);
     $n = $row['likes'];
 
-    mysqli_query($con, "INSERT INTO likes (userid, postid) VALUES (1, $postid)");
-    mysqli_query($con, "UPDATE posts SET likes=$n+1 WHERE id=$postid");
+    mysqli_query($db, "INSERT INTO likes (userid, postid) VALUES (1, $postid)");
+    mysqli_query($db, "UPDATE posts SET likes=$n+1 WHERE id=$postid");
 
     echo $n+1;
     exit();
 }
 if (isset($_POST['unliked'])) {
     $postid = $_POST['postid'];
-    $result = mysqli_query($con, "SELECT * FROM posts WHERE id=$postid");
+    $result = mysqli_query($db, "SELECT * FROM posts WHERE id=$postid");
     $row = mysqli_fetch_array($result);
     $n = $row['likes'];
 
-    mysqli_query($con, "DELETE FROM likes WHERE postid=$postid AND userid=1");
-    mysqli_query($con, "UPDATE posts SET likes=$n-1 WHERE id=$postid");
+    mysqli_query($db, "DELETE FROM likes WHERE postid=$postid AND userid=1");
+    mysqli_query($db, "UPDATE posts SET likes=$n-1 WHERE id=$postid");
 
     echo $n-1;
     exit();
@@ -41,7 +41,7 @@ $offset = ($pageno-1) * $size_page;
 
 $count_sql = "SELECT COUNT(*) FROM `posts`";
 // Отправляем запрос для получения количества элементов
-$result = mysqli_query($con, $count_sql);
+$result = mysqli_query($db, $count_sql);
 // Получаем результат
 $total_rows = mysqli_fetch_array($result)[0];
 // Вычисляем количество страниц
@@ -50,12 +50,12 @@ $total_pages = ceil($total_rows / $size_page);
 // Создаём SQL запрос для получения данных
 $sql = "SELECT * FROM `posts` ORDER BY id DESC LIMIT $offset, $size_page";
 // Отправляем SQL запрос
-$res_data = mysqli_query($con, $sql);
+$res_data = mysqli_query($db, $sql);
 // Цикл для вывода строк
 
 
 // Retrieve posts from the database
-$posts = mysqli_query($con, "SELECT * FROM posts ORDER BY id DESC");
+$posts = mysqli_query($db, "SELECT * FROM posts ORDER BY id DESC");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,7 +64,7 @@ $posts = mysqli_query($con, "SELECT * FROM posts ORDER BY id DESC");
     <title>Chat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http_stackpath.bootstrapcdn.com_bootstrap_4.3.1_css_bootstrap.css">
 </head>
 <body>
 <div class="container">
@@ -82,10 +82,10 @@ $posts = mysqli_query($con, "SELECT * FROM posts ORDER BY id DESC");
     <div class="post">
         <?php echo $row['text']; ?>
         <p><?php echo $row['dtime'];?></p>
-        <div style="padding: 2px; margin-top: 5px;">
+        <div>
             <?php
             // determine if user has already liked this post
-            $results = mysqli_query($con, "SELECT * FROM likes WHERE userid=1 AND postid=".$row['id']."");
+            $results = mysqli_query($db, "SELECT * FROM likes WHERE userid=1 AND postid=".$row['id']."");
 
             if (mysqli_num_rows($results) == 1 ): ?>
                 <!-- user already likes post -->
@@ -102,17 +102,18 @@ $posts = mysqli_query($con, "SELECT * FROM posts ORDER BY id DESC");
     </div>
     <?php echo '</ul>';?>
 <?php } ?>
-
+<div>
 <ul class="pagination">
-    <li><a href="?pageno=1">First</a></li>
+    <li class="page-item"><a class = "page-link" href="?pageno=1">First</a></li>
     <li class="<?php if($pageno <= 1){ echo 'disabled'; } ?>">
-        <a href="<?php if($pageno <= 1){ echo '#'; } else { echo "?pageno=".($pageno - 1); } ?>">Prev</a>
+        <a class = "page-link" href="<?php if($pageno <= 1){ echo '#'; } else { echo "?pageno=".($pageno - 1); } ?>">Prev</a>
     </li>
     <li class="<?php if($pageno >= $total_pages){ echo 'disabled'; } ?>">
-        <a href="<?php if($pageno >= $total_pages){ echo '#'; } else { echo "?pageno=".($pageno + 1); } ?>">Next</a>
+        <a class = "page-link" href="<?php if($pageno >= $total_pages){ echo '#'; } else { echo "?pageno=".($pageno + 1); } ?>">Next</a>
     </li>
-    <li><a href="?pageno=<?php echo $total_pages; ?>">Last</a></li>
+    <li class="page-item"><a class = "page-link" href="?pageno=<?php echo $total_pages; ?>">Last</a></li>
 </ul>
+</div>
 <!-- Add Jquery to page -->
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
 <script>
