@@ -81,7 +81,8 @@ $posts = mysqli_query($db, "SELECT * FROM posts ORDER BY id DESC");
 <?php while ($row = mysqli_fetch_array($res_data)) { ?>
 <?php echo '<ul>';?>
     <div class="post">
-        <div class="content_block hide">
+        <button class="btn-outline-dark" type="submit" id="del" data-id="<?php echo $row['id']; ?>"> Удалить </button>
+        <div class="content_block hide" >
         <?php echo $row['text']; ?>
         </div>
         <a class="content_toggle" href="#">Подробнее</a>
@@ -105,10 +106,10 @@ $posts = mysqli_query($db, "SELECT * FROM posts ORDER BY id DESC");
             <span class="likes_count"><?php echo $row['likes']; ?> likes</span>
         </div>
 
-            <input class="text-field__input" type="text" name="author" id="author" placeholder="Введите ваше имя...">
-            <input class="text-field__input" type="text" name="message" id="message" placeholder="Введите текст комментария...">
-            <input name="js" type="hidden" value="<?php echo $row['id']; ?>" id="js">
-            <button class="btn btn-dark" type="submit" id="send"> Отправить </button>
+            <input class="text-field__input" type="text" name="author" id="author<?php echo $row['id']; ?>" placeholder="Введите ваше имя...">
+            <input class="text-field__input" type="text" name="message" id="message<?php echo $row['id']; ?>" placeholder="Введите текст комментария...">
+            <input name="js" type="hidden">
+            <button class="btn btn-danger" type="submit" data-id="<?php echo $row['id']; ?>"> Отправить </button>
 
        <?php $resultcom = mysqli_query($db, "SELECT * FROM comments WHERE post_id=".$row['id'].""); ?>
         <div id="commentBlock">
@@ -192,11 +193,11 @@ $posts = mysqli_query($db, "SELECT * FROM posts ORDER BY id DESC");
         });
     });
 
-    $(function() {
-        $("#send").click(function(){ // При нажатии на кнопку
-            var author = $("#author").val(); // Получаем имя автора комментария
-            var message = $("#message").val(); // Получаем само сообщение
-            var postid1 = $("#js").val();
+    $(document).ready(function() {
+        $(".btn-danger").click(function(){
+            var postid1 = $(this).data('id');// При нажатии на кнопку
+            var author = $("#author" + postid1).val(); // Получаем имя автора комментария
+            var message = $("#message"+ postid1).val();// Получаем само сообщение
             $.ajax({ // Аякс
                 type: "POST", // Тип отправки "POST"
                 url: "./comments.php", // Куда отправляем(в какой файл)
@@ -211,6 +212,20 @@ $posts = mysqli_query($db, "SELECT * FROM posts ORDER BY id DESC");
                         $("#commentBlock").append("<div class='comment'>Автор: <strong>"+author+"</strong><br>"+message+"</div>");}
                     $("#resp").text(resultStat).show().delay(1500).fadeOut(800);}});return false;});});
 
+    $(document).ready(function() {
+        $(".btn-outline-dark").click(function(){
+            var id = $(this).data('id');// При нажатии на кнопку
+            $.ajax({ // Аякс
+                type: "POST", // Тип отправки "POST"
+                url: "./delete.php", // Куда отправляем(в какой файл)
+                data: {"id": id}, // Что передаем и под каким значением
+                cache: false, // Убираем кеширование
+                success: function(response){
+                    window.location.href='index.php';
+                }
+            });
+        });
+    });
 </script>
 </body>
 </html>
