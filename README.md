@@ -36,7 +36,7 @@
 | **userid** | INT |  | NO | ID пользователя |
 | **postid** | INT |  | NO | ID поста |
 ## 5. Алгоритмы
-1. [Добавление записи](https://imgur.com/a/SH2D4QU)
+1. [Добавление записи](https://imgur.com/a/tZItoOI)
 2. [Удаление записи](https://imgur.com/a/w8ARjPW)
 3. [Реакция](https://imgur.com/a/Kk5NxFf)
 4. [Комментарии](https://imgur.com/a/pj8oiLB)
